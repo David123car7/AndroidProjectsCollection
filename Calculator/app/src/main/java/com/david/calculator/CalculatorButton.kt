@@ -17,12 +17,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CalculatorButton(modifier: Modifier = Modifier, onButtonPressed: (String) -> Unit, isOperation: Boolean, label: String){
     Button(onClick = {onButtonPressed(label)},
-        modifier.size(90.dp).padding(8.dp),
+        modifier.size(80.dp).padding(8.dp),
         colors = ButtonDefaults.buttonColors(if(isOperation) Color.Red else Color.White)){
         Text(label,
             style = if ( label.count()==1)
-                MaterialTheme.typography.displayMedium else
-                MaterialTheme.typography.titleMedium,
+                MaterialTheme.typography.displaySmall else
+                MaterialTheme.typography.titleSmall,
             color = Color.Black
         )
     }

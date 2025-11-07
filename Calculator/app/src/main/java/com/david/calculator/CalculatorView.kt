@@ -24,7 +24,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CalculatorView(modifier: Modifier = Modifier){
 
-    var displayText by remember { mutableStateOf("0") }
+    var displayValue by remember { mutableStateOf("0.0") }
+    var displayOperator by remember { mutableStateOf("") }
+
 
     val calculatorBrain by remember {  mutableStateOf(CalculatorBrain()) }
     var doingOperation by remember {  mutableStateOf(false) }
@@ -32,14 +34,14 @@ fun CalculatorView(modifier: Modifier = Modifier){
 
     val onDigitPressed: (String) -> Unit = { digit ->
         if(doingOperation){
-            displayText = ""
+            displayValue = ""
             doingOperation = false
         }
 
-        if(displayText == "0")
-            displayText = digit;
-        else{
-            displayText += digit
+        if (displayValue == "0.0")
+            displayValue = digit;
+        else {
+            displayValue += digit
         }
 
         Log.d("Calculator", "Digit pressed: $digit")
@@ -47,13 +49,10 @@ fun CalculatorView(modifier: Modifier = Modifier){
 
     val onOperationPressed: (String) -> Unit = { operation ->
         if(!doingOperation){
-            calculatorBrain.InsertNumber(displayText)
-            displayText = operation
-            displayText = calculatorBrain.DoOperation(operation)
-
-            Log.d("Calculator", "Operation pressed: $operation")
-
+            displayValue = calculatorBrain.HandleCalculation(operation, displayValue)
+            displayOperator = operation
             doingOperation = true
+            Log.d("Calculator", "Operation pressed: $operation")
         }
     }
 
@@ -63,9 +62,17 @@ fun CalculatorView(modifier: Modifier = Modifier){
         Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(){
                 Text(modifier = Modifier
+                    .fillMaxWidth(),
+                    text = displayOperator,
+                    textAlign = TextAlign.End,
+                    style = MaterialTheme.typography.displaySmall
+                )
+            }
+            Row(){
+                Text(modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
-                    text = displayText,
+                    text = displayValue,
                     textAlign = TextAlign.End,
                     style = MaterialTheme.typography.displayLarge
                 )
@@ -97,7 +104,7 @@ fun CalculatorView(modifier: Modifier = Modifier){
             Row() {
                 CalculatorButton(modifier, onButtonPressed = onDigitPressed, false, "0")
                 CalculatorButton(modifier, onButtonPressed = onDigitPressed, false, ".")
-                CalculatorButton(modifier, onButtonPressed = onDigitPressed, false, "=")
+                CalculatorButton(modifier, onButtonPressed = onOperationPressed, true, "=")
                 CalculatorButton(modifier, onButtonPressed = onOperationPressed , true, "×")
             }
         }
