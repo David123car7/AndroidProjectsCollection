@@ -27,21 +27,23 @@ fun CalculatorView(modifier: Modifier = Modifier){
     var displayValue by remember { mutableStateOf("0.0") }
     var displayOperator by remember { mutableStateOf("") }
 
-
     val calculatorBrain by remember {  mutableStateOf(CalculatorBrain()) }
-    var doingOperation by remember {  mutableStateOf(false) }
+    var canDoOperation by remember {  mutableStateOf(false) }
     var endedOperation by remember {  mutableStateOf(false) }
 
     val onDigitPressed: (String) -> Unit = { digit ->
+        //If the operation ended and user presses a digit
         if(endedOperation){
             calculatorBrain.ResetCalculator()
             displayValue = "0.0"
             displayOperator = ""
             endedOperation = false
+            canDoOperation = true
         }
-        else if(doingOperation){
+
+        else if(!canDoOperation){
             displayValue = ""
-            doingOperation = false
+            canDoOperation = true
         }
 
         if (displayValue == "0.0")
@@ -54,23 +56,26 @@ fun CalculatorView(modifier: Modifier = Modifier){
     }
 
     val onOperationPressed: (String) -> Unit = { operation ->
-        if(!doingOperation){
-            if(operation == "C") {
-                displayValue = calculatorBrain.currentNumber.toString()
-                doingOperation = true
+        if(canDoOperation || operation == "AC"){
+            if(operation == "=" ){
+                displayOperator = ""
+                endedOperation = true
+                canDoOperation = true
             }
             else{
-                if(operation == "="){
+                if(operation == "AC"){
                     displayOperator = ""
-                    endedOperation = true
                 }
                 else{
-                    displayOperator = operation
-                    endedOperation = false
-                    doingOperation = true
+                    if(operation != "C"){
+                        displayOperator = operation
+                        endedOperation = false
+                    }
                 }
-                displayValue = calculatorBrain.HandleCalculation(operation, displayValue)
+                canDoOperation = false
             }
+
+            displayValue = calculatorBrain.HandleCalculation(operation, displayValue)
             Log.d("Calculator", "Operation pressed: $operation")
         }
     }
