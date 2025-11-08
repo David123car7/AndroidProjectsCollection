@@ -35,34 +35,34 @@ class CalculatorBrain {
         }
     }
     var currentNumber: Double = 0.0
-    var operationNumber: Double = 0.0
     var currentOperation: Operation = Operation.NONE
 
-    fun InsertNumber(number: String){
-        if(currentNumber == 0.0){
-            currentNumber = number.toDouble()
-        }
-        else{
-            operationNumber = number.toDouble()
-        }
-    }
-
     fun HandleCalculation(op: String, value: String): String{
-        InsertNumber(value)
+        //InsertNumber(value)
 
-        var newOperation = Operation.parseOperation(op)
+        val newOperation = Operation.parseOperation(op)
         if(currentOperation != Operation.NONE){
-            DoOperation(currentOperation)
+            DoOperation(currentOperation, value.toDouble())
         }
+        else
+            currentNumber = value.toDouble()
 
-        currentOperation = newOperation
+        if(newOperation != Operation.EQUAL)
+            currentOperation = newOperation
+        else
+            currentOperation = Operation.NONE
+
         return currentNumber.toString()
     }
 
-    fun DoOperation(operation: Operation){
+    fun DoOperation(operation: Operation, value: Double){
         if(operation == Operation.ADD){
-            currentNumber += operationNumber
-            operationNumber = 0.0
+            currentNumber += value
         }
+    }
+
+    fun ResetCalculator(){
+        currentNumber = 0.0
+        currentOperation = Operation.NONE
     }
 }

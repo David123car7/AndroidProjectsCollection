@@ -30,10 +30,16 @@ fun CalculatorView(modifier: Modifier = Modifier){
 
     val calculatorBrain by remember {  mutableStateOf(CalculatorBrain()) }
     var doingOperation by remember {  mutableStateOf(false) }
-
+    var endedOperation by remember {  mutableStateOf(false) }
 
     val onDigitPressed: (String) -> Unit = { digit ->
-        if(doingOperation){
+        if(endedOperation){
+            calculatorBrain.ResetCalculator()
+            displayValue = "0.0"
+            displayOperator = ""
+            endedOperation = false
+        }
+        else if(doingOperation){
             displayValue = ""
             doingOperation = false
         }
@@ -49,9 +55,22 @@ fun CalculatorView(modifier: Modifier = Modifier){
 
     val onOperationPressed: (String) -> Unit = { operation ->
         if(!doingOperation){
-            displayValue = calculatorBrain.HandleCalculation(operation, displayValue)
-            displayOperator = operation
-            doingOperation = true
+            if(operation == "C") {
+                displayValue = calculatorBrain.currentNumber.toString()
+                doingOperation = true
+            }
+            else{
+                if(operation == "="){
+                    displayOperator = ""
+                    endedOperation = true
+                }
+                else{
+                    displayOperator = operation
+                    endedOperation = false
+                    doingOperation = true
+                }
+                displayValue = calculatorBrain.HandleCalculation(operation, displayValue)
+            }
             Log.d("Calculator", "Operation pressed: $operation")
         }
     }
