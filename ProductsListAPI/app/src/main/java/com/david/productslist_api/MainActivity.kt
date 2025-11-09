@@ -20,28 +20,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProductsListAPITheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    ProductsListView(modifier = Modifier.padding(innerPadding), "https://dummyjson.com/products")
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ProductsListAPITheme {
-        Greeting("Android")
     }
 }
