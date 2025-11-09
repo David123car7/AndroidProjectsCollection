@@ -21,6 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 
+
+
 @Composable
 fun CalculatorView(modifier: Modifier = Modifier){
 
@@ -63,16 +65,21 @@ fun CalculatorView(modifier: Modifier = Modifier){
                 canDoOperation = true
             }
             else{
-                if(operation == "AC"){
-                    displayOperator = ""
+                if(operation == "√" || operation == "%"){
+                    canDoOperation = true
                 }
                 else{
-                    if(operation != "C"){
-                        displayOperator = operation
-                        endedOperation = false
+                    if(operation == "AC"){
+                        displayOperator = ""
                     }
+                    else{
+                        if(operation != "C"){
+                            displayOperator = operation
+                            endedOperation = false
+                        }
+                    }
+                    canDoOperation = false
                 }
-                canDoOperation = false
             }
 
             displayValue = calculatorBrain.HandleCalculation(operation, displayValue)

@@ -1,7 +1,7 @@
 package com.david.calculator
 
-import android.util.Log
-import androidx.compose.runtime.Composable
+import kotlin.math.pow
+import kotlin.math.round
 import kotlin.math.sqrt
 
 class CalculatorBrain {
@@ -45,10 +45,22 @@ class CalculatorBrain {
             if(newOperation == Operation.CLEAR){
                 ResetCalculator()
             }
+            else if(newOperation == Operation.SQRT){
+                currentNumber = sqrt(value.toDouble())
+            }
+            else if(newOperation == Operation.PERCENTAGE){
+                currentNumber /= 100
+            }
             else{
                 if(currentOperation != Operation.NONE){
-                    DoOperation(currentOperation, value.toDouble())
-                }
+                    if(currentOperation == Operation.ADD)
+                        currentNumber += value.toDouble()
+                    else if(currentOperation == Operation.SUBTRACT)
+                        currentNumber -= value.toDouble()
+                    else if(currentOperation == Operation.MULTIPLY)
+                        currentNumber *= value.toDouble()
+                    else if(currentOperation == Operation.DIVIDE)
+                        currentNumber /= value.toDouble()                }
                 else
                     currentNumber = value.toDouble()
 
@@ -59,20 +71,8 @@ class CalculatorBrain {
             }
         }
 
+        currentNumber = round(currentNumber * 10.0.pow(6)) / 10.0.pow(6)
         return currentNumber.toString()
-    }
-
-    fun DoOperation(operation: Operation, value: Double){
-        if(operation == Operation.ADD)
-            currentNumber += value
-        else if(operation == Operation.SUBTRACT)
-            currentNumber -= value
-        else if(operation == Operation.MULTIPLY)
-            currentNumber *= value
-        else if(operation == Operation.DIVIDE)
-            currentNumber /= value
-        else if(operation == Operation.SQRT)
-            currentNumber = sqrt(currentNumber)
     }
 
     fun ResetCalculator(){
