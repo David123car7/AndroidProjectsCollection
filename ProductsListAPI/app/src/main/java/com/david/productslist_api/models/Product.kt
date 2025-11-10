@@ -5,17 +5,21 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 
 data class Product (
+    var id      : String? = null,
     var title      : String? = null,
     var description       : String? = null,
     var category : String? = null,
-){
+    var thumbnail : String? = null,
+    ){
     companion object{
         fun fromJson(json : JSONObject) : Product {
             return Product(
+                json.getString("id"),
                 json.getString("title"),
                 json.getString("description"),
                 json.getString("category"),
-            )
+                json.getString("thumbnail"),
+                )
         }
     }
 }

@@ -15,14 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.david.productslist_api.models.Product
 
 @Composable
-fun ProductsListView(modifier: Modifier = Modifier, apiURL: String){
+fun ProductsListView(modifier: Modifier = Modifier, apiURL: String, navController: NavController){
     val productsViewModel : ProductsListViewModel = viewModel()
     val uiState by productsViewModel.uiState
 
-    ProductsListViewContent(modifier = modifier, uiState = uiState)
+    ProductsListViewContent(modifier = modifier, uiState = uiState, navController)
 
     LaunchedEffect(Unit) {
         productsViewModel.fetchProducts(apiURL)
@@ -30,7 +32,7 @@ fun ProductsListView(modifier: Modifier = Modifier, apiURL: String){
 }
 
 @Composable
-fun ProductsListViewContent(modifier: Modifier = Modifier, uiState: ProductsListViewModel.ProductsListState){
+fun ProductsListViewContent(modifier: Modifier = Modifier, uiState: ProductsListViewModel.ProductsListState, navController: NavController){
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center){
         if(uiState.isLoading){
             CircularProgressIndicator()
@@ -41,15 +43,16 @@ fun ProductsListViewContent(modifier: Modifier = Modifier, uiState: ProductsList
         else{
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 itemsIndexed(items = uiState.products){ index, product ->
-                    ProductViewCell(product)
+                    ProductViewCell(product,
+                        onClick = {navController.navigate("productDetail/${product.id}")})
                 }
             }
         }
     }
 }
 
+
 @Composable
 @Preview
 fun ProducstListPreview(){
-    ProductsListView(apiURL = "https://dummyjson.com/products")
 }

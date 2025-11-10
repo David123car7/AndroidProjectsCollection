@@ -89,7 +89,7 @@ fun CalculatorView(modifier: Modifier = Modifier){
 
     Box(modifier
         .fillMaxSize()
-        .padding(all = 15.dp)){
+        .padding(all = 10.dp)){
         Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(){
                 Text(modifier = Modifier
