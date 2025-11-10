@@ -2,7 +2,9 @@ package com.david.shoppinglist.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -45,13 +47,21 @@ fun LoginView(modifier: Modifier = Modifier, navController : NavController = rem
             Text(text = uiState.error!!, modifier = Modifier.padding(8.dp))
         }
 
-        Button(modifier = Modifier.padding(8.dp),
-            onClick = {
-                viewModel.login(){
-                    navController.navigate("home")
-                }
-            }){
-            Text("Login")
+        Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+            Button(modifier = Modifier.padding(8.dp),
+                onClick = {
+                    viewModel.login(){
+                        navController.navigate("home")
+                    }
+                }){
+                Text("Login")
+            }
+            Button(modifier = Modifier.padding(8.dp),
+                onClick = {
+                    navController.navigate("register")
+                }){
+                Text("Register")
+            }
         }
         if (uiState.isLoading) {
             CircularProgressIndicator()
