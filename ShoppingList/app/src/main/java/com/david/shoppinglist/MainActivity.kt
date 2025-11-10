@@ -10,6 +10,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.david.shoppinglist.home.HomeView
+import com.david.shoppinglist.login.LoginView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,9 +22,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             ShoppingListTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginView(modifier = Modifier.padding(innerPadding))
+                    NavHost(
+                        navController = navController,
+                        startDestination = "login",
+                        modifier = Modifier.padding(innerPadding)
+                    ){
+                        composable ("login"){
+                            LoginView(modifier = Modifier.padding(innerPadding),
+                                navController = navController)
+                        }
+                        composable ("home"){
+                            HomeView(modifier = Modifier.padding(innerPadding))
+                        }
+                    }
                 }
             }
         }
