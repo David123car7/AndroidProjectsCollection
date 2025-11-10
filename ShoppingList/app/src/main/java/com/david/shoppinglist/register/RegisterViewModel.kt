@@ -1,4 +1,4 @@
-package com.david.shoppinglist.login
+package com.david.shoppinglist.register
 
 import android.content.ContentValues.TAG
 import android.util.Log
@@ -8,16 +8,16 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
-
-data class LoginState (
+data class RegisterState (
     var email : String? = null,
     var password : String? = null,
     var error : String? = null,
     var isLoading : Boolean = false
 )
 
-class LoginViewModel: ViewModel() {
-    var uiState = mutableStateOf(LoginState())
+class RegisterViewModel: ViewModel() {
+
+    var uiState = mutableStateOf(RegisterState())
 
     fun updateEmail(email : String) {
         uiState.value = uiState.value.copy(email = email)
@@ -27,7 +27,7 @@ class LoginViewModel: ViewModel() {
         uiState.value = uiState.value.copy(password = password)
     }
 
-    fun login(onLoginSuccess:()->Unit) {
+    fun register(onRegisterSuccess:()->Unit) {
         uiState.value = uiState.value.copy(isLoading = true)
 
         if (uiState.value.email.isNullOrEmpty()) {
@@ -46,21 +46,17 @@ class LoginViewModel: ViewModel() {
 
         var auth: FirebaseAuth
         auth = Firebase.auth
-        auth.signInWithEmailAndPassword(
+        auth.createUserWithEmailAndPassword(
             uiState.value.email!!,
             uiState.value.password!!)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
-                    //updateUI(user)
                     uiState.value = uiState.value.copy(
                         isLoading = false,
                         error = null)
-                    onLoginSuccess()
+                    onRegisterSuccess()
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     uiState.value = uiState.value.copy(
                         isLoading = false,
@@ -68,5 +64,4 @@ class LoginViewModel: ViewModel() {
                 }
             }
     }
-
 }

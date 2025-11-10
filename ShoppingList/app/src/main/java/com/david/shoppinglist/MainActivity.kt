@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.david.shoppinglist.home.HomeView
 import com.david.shoppinglist.login.LoginView
+import com.david.shoppinglist.register.RegisterView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,9 +28,13 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "login",
+                        startDestination = "register",
                         modifier = Modifier.padding(innerPadding)
                     ){
+                        composable ("register"){
+                            RegisterView(modifier = Modifier.padding(innerPadding),
+                                navController = navController)
+                        }
                         composable ("login"){
                             LoginView(modifier = Modifier.padding(innerPadding),
                                 navController = navController)
