@@ -20,6 +20,13 @@ An app that interacts with a REST API to:
 - Demonstrate the use of JSON parsing in Android
 - Showcase clean architecture and composable UI elements
 
+### 🛒 ShoppingList
+
+A shopping list app where users can:
+- Add, view, and manage items in a shopping cart
+- Register and log in funcionality
+- Firebase integration
+
 ## 🧰 Tech Stack
 
 - **Language:** Kotlin  
