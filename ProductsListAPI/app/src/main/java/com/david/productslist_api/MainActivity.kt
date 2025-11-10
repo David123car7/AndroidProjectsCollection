@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProductsListAPITheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ProductsListView(modifier = Modifier.padding(innerPadding), "https://dummyjson.com/products")
+                        ProductsListView(modifier = Modifier.padding(innerPadding), "https://dummyjson.com/products")
                 }
             }
         }
