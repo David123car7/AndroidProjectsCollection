@@ -1,4 +1,4 @@
-package com.david.productslist_api
+package com.david.productslist_api.listProducts
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.david.productslist_api.models.Product
+import com.david.productslist_api.ui.theme.components.ProductViewCell
 
 @Composable
 fun ProductsListView(modifier: Modifier = Modifier, apiURL: String, navController: NavController){
@@ -43,8 +43,8 @@ fun ProductsListViewContent(modifier: Modifier = Modifier, uiState: ProductsList
         else{
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 itemsIndexed(items = uiState.products){ index, product ->
-                    ProductViewCell(product,
-                        onClick = {navController.navigate("productDetail/${product.id}")})
+                    ProductViewCell( product,
+                        onClick = { navController.navigate("productDetail/${product.id}") })
                 }
             }
         }

@@ -1,4 +1,5 @@
-package com.david.productslist_api
+package com.david.productslist_api.listProducts
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.david.productslist_api.models.Product
@@ -50,7 +51,7 @@ class  ProductsListViewModel: ViewModel(){
                     val productsList = arrayListOf<Product>()
                     for (i in 0 until productsJson.length()) {
                         val productJson = productsJson.getJSONObject(i)
-                        val product = Product.fromJson(productJson)
+                        val product = Product.Companion.fromJson(productJson)
                         productsList.add(product)
                     }
 

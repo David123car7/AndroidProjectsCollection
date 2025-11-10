@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.david.productslist_api.detail.ProductDetailView
+import com.david.productslist_api.listProducts.ProductsListView
 import com.david.productslist_api.ui.theme.ProductsListAPITheme
 
 class MainActivity : ComponentActivity() {
@@ -26,7 +27,11 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(navController = navController, startDestination = "productList"){
                         composable("productList") {
-                            ProductsListView(modifier = Modifier.padding(innerPadding), "https://dummyjson.com/products", navController)
+                            ProductsListView(
+                                modifier = Modifier.padding(innerPadding),
+                                "https://dummyjson.com/products",
+                                navController
+                            )
                         }
                         composable("productDetail/{productId}") { backStackEntry ->
                             val productId = backStackEntry.arguments?.getString("productId")
