@@ -10,12 +10,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.david.shoppinglist.cart.ShoppingCartView
 import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.home.HomeView
 import com.david.shoppinglist.login.LoginView
+import com.david.shoppinglist.profile.ProfileView
 import com.david.shoppinglist.register.RegisterView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "login",
+                        startDestination = "home",
                         modifier = Modifier.padding(innerPadding)
                     ){
                         composable ("register"){
@@ -43,7 +46,13 @@ class MainActivity : ComponentActivity() {
                                 navController = navController)
                         }
                         composable ("home"){
-                            HomeView(modifier = Modifier.padding(innerPadding))
+                            HomeView(modifier = Modifier.padding(innerPadding), navController = navController)
+                        }
+                        composable ("profile"){
+                            ProfileView(modifier = Modifier.padding(innerPadding), navController = navController)
+                        }
+                        composable ("cart"){
+                            ShoppingCartView(modifier = Modifier.padding(innerPadding), navController = navController)
                         }
                     }
                 }

@@ -3,7 +3,6 @@ package com.david.shoppinglist.firestore
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-
 class FirestoreDB(val firestore: FirebaseFirestore = Firebase.firestore) {
     val collections = FirestoreCollections()
 
