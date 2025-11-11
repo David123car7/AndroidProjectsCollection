@@ -25,7 +25,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.david.shoppinglist.ui.theme.Black01
 @Composable
-fun NavbarView(modifier: Modifier = Modifier, navController : NavController = rememberNavController()){
+fun NavbarView(modifier: Modifier, navController : NavController = rememberNavController()){
     Column(modifier = modifier) {
         HorizontalDivider(modifier, thickness = 1.dp, color = Black01)
         Row(modifier = modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -78,5 +78,4 @@ fun NavbarView(modifier: Modifier = Modifier, navController : NavController = re
 @Preview
 @Composable
 fun NavbarPreview(){
-    NavbarView()
 }

@@ -19,7 +19,7 @@ import com.david.shoppinglist.navbar.NavbarView
 import com.david.shoppinglist.ui.theme.White01
 
 @Composable
-fun HomeView(modifier: Modifier = Modifier, navController: NavController){
+fun HomeView(modifier: Modifier, navController: NavController){
     Column(modifier = modifier.fillMaxSize().background(color = White01)) {
         Box(modifier = Modifier.fillMaxWidth()){
             Text(modifier = Modifier,text = "Home Page")
@@ -33,6 +33,5 @@ fun HomeView(modifier: Modifier = Modifier, navController: NavController){
 @Preview
 @Composable
 fun HomePreview(){
-    HomeView(navController = rememberNavController())
 }
 

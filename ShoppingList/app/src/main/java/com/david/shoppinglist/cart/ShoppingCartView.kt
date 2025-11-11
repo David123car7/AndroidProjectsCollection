@@ -17,7 +17,7 @@ import com.david.shoppinglist.navbar.NavbarView
 import com.david.shoppinglist.ui.theme.White01
 
 @Composable
-fun ShoppingCartView(modifier: Modifier = Modifier, navController: NavController){
+fun ShoppingCartView(modifier: Modifier, navController: NavController){
     Column(modifier = modifier.fillMaxSize().background(color = White01)) {
         Box(modifier = Modifier.fillMaxWidth()){
             Text(modifier = Modifier,text = "Shopping Cart View")
@@ -31,5 +31,4 @@ fun ShoppingCartView(modifier: Modifier = Modifier, navController: NavController
 @Preview
 @Composable
 fun ShoppingCartPreview(){
-    ShoppingCartView(navController = rememberNavController())
 }

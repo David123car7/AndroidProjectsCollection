@@ -17,14 +17,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.david.shoppinglist.auth.Authentication
+import com.david.shoppinglist.constants.NavigationViews
 import com.david.shoppinglist.firestore.FirestoreDB
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
 @Composable
-fun RegisterView(modifier: Modifier = Modifier, navController : NavController = rememberNavController(), firestoreDB: FirestoreDB = FirestoreDB()){
-    val viewModel : RegisterViewModel = viewModel()
+fun RegisterView(modifier: Modifier, navController : NavController = rememberNavController(), firestoreDB: FirestoreDB, authentication: Authentication){
+    val factory = RegisterViewModelFactory(authentication = authentication, firestoreDB = firestoreDB)
+    val viewModel : RegisterViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState
 
     Column(modifier = modifier.fillMaxSize(),
@@ -66,7 +69,7 @@ fun RegisterView(modifier: Modifier = Modifier, navController : NavController = 
         Button(modifier = Modifier.padding(8.dp),
             onClick = {
                 viewModel.register(){
-                    navController.navigate("login")
+                    navController.navigate(NavigationViews.login)
                 }
             }){
             Text("Register")
@@ -80,5 +83,5 @@ fun RegisterView(modifier: Modifier = Modifier, navController : NavController = 
 @Preview
 @Composable
 fun RegisterPreview(){
-    RegisterView()
+
 }

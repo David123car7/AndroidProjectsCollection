@@ -19,10 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.david.shoppinglist.auth.Authentication
+import com.david.shoppinglist.constants.NavigationViews
 
 @Composable
-fun LoginView(modifier: Modifier = Modifier, navController : NavController = rememberNavController()){
-    val viewModel : LoginViewModel = viewModel()
+fun LoginView(modifier: Modifier, navController : NavController = rememberNavController(), authentication: Authentication){
+    val factory = LoginViewModelFactory(authentication = authentication)
+    val viewModel : LoginViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState
 
     Column(modifier = modifier.fillMaxSize(),
@@ -58,7 +61,7 @@ fun LoginView(modifier: Modifier = Modifier, navController : NavController = rem
             }
             Button(modifier = Modifier.padding(8.dp),
                 onClick = {
-                    navController.navigate("register")
+                    navController.navigate(NavigationViews.register)
                 }){
                 Text("Register")
             }
@@ -72,5 +75,4 @@ fun LoginView(modifier: Modifier = Modifier, navController : NavController = rem
 @Preview
 @Composable
 fun LoginPreview(){
-    LoginView()
 }

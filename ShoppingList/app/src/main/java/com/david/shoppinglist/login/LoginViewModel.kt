@@ -1,13 +1,8 @@
 package com.david.shoppinglist.login
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-
+import com.david.shoppinglist.auth.Authentication
 
 data class LoginState (
     var email : String? = null,
@@ -16,7 +11,7 @@ data class LoginState (
     var isLoading : Boolean = false
 )
 
-class LoginViewModel: ViewModel() {
+class LoginViewModel(val authentication: Authentication): ViewModel() {
     var uiState = mutableStateOf(LoginState())
 
     fun updateEmail(email : String) {
@@ -44,29 +39,7 @@ class LoginViewModel: ViewModel() {
             return
         }
 
-        var auth: FirebaseAuth
-        auth = Firebase.auth
-        auth.signInWithEmailAndPassword(
-            uiState.value.email!!,
-            uiState.value.password!!)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithEmail:success")
-                    val user = auth.currentUser
-                    //updateUI(user)
-                    uiState.value = uiState.value.copy(
-                        isLoading = false,
-                        error = null)
-                    onLoginSuccess()
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    uiState.value = uiState.value.copy(
-                        isLoading = false,
-                        error = task.exception?.message.toString())
-                }
-            }
+        authentication.login(onLoginSuccess = onLoginSuccess, uiState = uiState)
     }
 
 }
