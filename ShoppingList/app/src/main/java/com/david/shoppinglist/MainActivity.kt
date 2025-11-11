@@ -13,10 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.home.HomeView
 import com.david.shoppinglist.login.LoginView
 import com.david.shoppinglist.register.RegisterView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
+            val fb = FirestoreDB(FirebaseFirestore.getInstance())
             ShoppingListTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
@@ -33,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     ){
                         composable ("register"){
                             RegisterView(modifier = Modifier.padding(innerPadding),
-                                navController = navController)
+                                navController = navController, firestoreDB = fb)
                         }
                         composable ("login"){
                             LoginView(modifier = Modifier.padding(innerPadding),

@@ -17,15 +17,33 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.david.shoppinglist.firestore.FirestoreDB
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 @Composable
-fun RegisterView(modifier: Modifier = Modifier, navController : NavController = rememberNavController()){
+fun RegisterView(modifier: Modifier = Modifier, navController : NavController = rememberNavController(), firestoreDB: FirestoreDB = FirestoreDB()){
     val viewModel : RegisterViewModel = viewModel()
     val uiState by viewModel.uiState
 
     Column(modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
+        TextField(
+            value = uiState.firstName ?: "",
+            label = { Text("First Name") },
+            modifier = Modifier.padding(8.dp),
+            onValueChange = {
+                viewModel.updateFirstName(it)
+            })
+        TextField(
+            value = uiState.lastName ?: "",
+            label = { Text("Last Name") },
+            modifier = Modifier.padding(8.dp),
+            onValueChange = {
+                viewModel.updateLastName(it)
+            })
         TextField(
             value = uiState.email ?: "",
             label = { Text("Email") },
