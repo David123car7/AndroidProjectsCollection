@@ -20,10 +20,17 @@ class FirestoreDB(val firestore: FirebaseFirestore) {
             }
     }
 
-    fun editUser(uid: String, firstName: String, lastName: String){
+    fun editUserFirstName(uid: String, firstName: String){
         if(!uid.isEmpty()){
             val userRef = firestore.collection(FirestoreCollections.users).document(uid)
-            userRef.update("firstName", firstName, "lastName", lastName)
+            userRef.update("firstName", firstName)
+        }
+    }
+
+    fun editUserLastName(uid: String, lastName: String){
+        if(!uid.isEmpty()){
+            val userRef = firestore.collection(FirestoreCollections.users).document(uid)
+            userRef.update("lastName", lastName)
         }
     }
 

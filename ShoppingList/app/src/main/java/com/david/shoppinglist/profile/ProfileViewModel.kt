@@ -15,6 +15,8 @@ class ProfileViewModel(): ViewModel() {
     var uiState = mutableStateOf(ProfileState())
         private set
 
+    var oldState = ProfileState()
+
     fun updateFirstName(firstName: String){
         val currentUser = uiState.value.user
         if(currentUser != null){
@@ -33,6 +35,19 @@ class ProfileViewModel(): ViewModel() {
         }
     }
 
+    fun editProfile(uid: String, firestoreDB: FirestoreDB){
+        uiState.value.user?.let { user ->
+            if(user.firstName.isNotEmpty() && (user.firstName != oldState.user?.firstName)){
+                firestoreDB.editUserFirstName(uid, user.firstName)
+                oldState.user?.firstName = user.firstName
+            }
+            if(user.lastName.isNotEmpty() && (user.lastName != oldState.user?.lastName)){
+                firestoreDB.editUserLastName(uid, user.lastName)
+                oldState.user?.lastName = user.lastName
+            }
+        }
+    }
+
     fun fetchProfile(uid: String, firestoreDB: FirestoreDB){
         firestoreDB.getUser(uid){ doc ->
             if(doc != null && doc.exists()){
@@ -41,6 +56,7 @@ class ProfileViewModel(): ViewModel() {
                     lastName = doc.getString("lastName") ?: ""
                 )
                 uiState.value = uiState.value.copy(user = user, error = null)
+                oldState = uiState.value
             }
             else{
                 uiState.value = uiState.value.copy(user = null,error = "Error fetching profile")

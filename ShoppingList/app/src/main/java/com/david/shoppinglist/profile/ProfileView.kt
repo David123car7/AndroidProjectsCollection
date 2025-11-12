@@ -48,15 +48,9 @@ fun ProfileView(modifier: Modifier = Modifier, firestoreDB: FirestoreDB,
     ProfileViewContent(modifier = modifier, navController = navController, uiState = uiState,
         onFirstNameUpdate = {value -> profileViewModel.updateFirstName(value)},
         onLastNameUpdate = {value -> profileViewModel.updateLastName(value)},
-        onProfileUpdate = {
-            uiState.user?.let { user ->
-                if(user.firstName.isNotEmpty() && user.lastName.isNotEmpty())
-                    firestoreDB.editUser(uid, user.firstName, user.lastName)
-            }
-        })
+        onProfileUpdate = { profileViewModel.editProfile(uid = uid, firestoreDB = firestoreDB)})
 
     LaunchedEffect(Unit) {
-        Log.d("ProfileView", "UID: ${uid}")
         profileViewModel.fetchProfile(uid = uid, firestoreDB = firestoreDB)
     }
 }
