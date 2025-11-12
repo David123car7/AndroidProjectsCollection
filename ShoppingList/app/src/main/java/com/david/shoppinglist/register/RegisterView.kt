@@ -32,60 +32,71 @@ import com.google.firebase.firestore.firestore
 
 @Composable
 fun RegisterView(modifier: Modifier, navController : NavController = rememberNavController(), firestoreDB: FirestoreDB, authentication: Authentication){
-    val factory = RegisterViewModelFactory(authentication = authentication, firestoreDB = firestoreDB)
-    val viewModel : RegisterViewModel = viewModel(factory = factory)
+    val viewModel : RegisterViewModel = viewModel()
     val uiState by viewModel.uiState
 
-    RegisterViewContent(modifier = modifier, uiState = uiState, navController = navController, viewModel = viewModel)
-    //use onUpdateValues() to call viewModel only here
+    RegisterViewContent(
+        modifier = modifier,
+        uiState = uiState,
+        onFirstNameUpdate = {value -> viewModel.updateFirstName(value)},
+        onLastNameUpdate = {value ->  viewModel.updateLastName(value)},
+        onEmailUpdate = {value ->  viewModel.updateEmail(value)},
+        onPasswordUpdate = {value ->  viewModel.updatePassword(value)},
+        onRegister = {viewModel.register(
+            authentication = authentication,
+            firestoreDB = firestoreDB,
+            onUserCreated = {navController.navigate(NavigationViews.login)})})
 }
 
 @Composable
-fun RegisterViewContent(modifier: Modifier, uiState: RegisterState, navController: NavController, viewModel: RegisterViewModel){
+fun RegisterViewContent(modifier: Modifier,
+                        uiState: RegisterState,
+                        onFirstNameUpdate:(newValue: String)->Unit,
+                        onLastNameUpdate:(newValue: String)->Unit,
+                        onEmailUpdate:(newValue: String)->Unit,
+                        onPasswordUpdate:(newValue: String)->Unit,
+                        onRegister:()->Unit
+                        ){
+
     Column(modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(modifier = modifier.fillMaxWidth()){
-            Text("First Name: ")
-            TextField(
-                value = uiState.firstName,
-                label = { Text("First Name") },
-                modifier = Modifier.padding(8.dp),
-                onValueChange = {
-                    viewModel.updateFirstName(it)
-                })
-        }
+        TextField(
+            value = uiState.firstName,
+            label = { Text("First Name") },
+            modifier = Modifier.padding(8.dp),
+            onValueChange = { value ->
+                onFirstNameUpdate(value)
+            })
         TextField(
             value = uiState.lastName,
             label = { Text("Last Name") },
             modifier = Modifier.padding(8.dp),
-            onValueChange = {
-                viewModel.updateLastName(it)
+            onValueChange = { value ->
+                onLastNameUpdate(value)
             })
         TextField(
-            value = uiState.email ?: "",
+            value = uiState.email,
             label = { Text("Email") },
             modifier = Modifier.padding(8.dp),
-            onValueChange = {
-                viewModel.updateEmail(it)
+            onValueChange = { value ->
+                onEmailUpdate(value)
             })
         TextField(
-            value = uiState.password ?: "",
+            value = uiState.password,
             label = { Text("Password") },
             modifier = Modifier.padding(8.dp),
-            onValueChange = {
-                viewModel.updatePassword(it)
+            onValueChange = { value ->
+                onPasswordUpdate(value)
             })
 
         if (uiState.error != null) {
-            Text(text = uiState.error!!, modifier = Modifier.padding(8.dp))
+            Text(text = uiState.error, modifier = Modifier.padding(8.dp))
         }
 
         Button(modifier = Modifier.padding(8.dp),
             onClick = {
-                viewModel.register(){
-                    navController.navigate(NavigationViews.login)
-                }
+                onRegister()
             }){
             Text("Register")
         }
@@ -99,13 +110,14 @@ fun RegisterViewContent(modifier: Modifier, uiState: RegisterState, navControlle
 @Composable
 fun RegisterPreview(){
     ShoppingListTheme() {
-        val uiState = RegisterState(uid = "uid", email = "kazzio@gmail.com",
-            "password", "firstName", "lastName")
+        val uiState = RegisterState(uid = "",
+            email = "", password = "",
+            firstName = "", lastName = "",
+            error = "", isLoading = false)
 
-        RegisterViewContent(
-            modifier = Modifier,
-            uiState = uiState,
-            navController = rememberNavController(),
-            viewModel = RegisterViewModel(authentication = Authentication(FirebaseAuth.getInstance()), firestoreDB = FirestoreDB(FirebaseFirestore.getInstance())))
+        RegisterViewContent(modifier = Modifier,
+            uiState = uiState, onFirstNameUpdate = { Unit},
+            onLastNameUpdate = { Unit}, onPasswordUpdate = { Unit},
+            onEmailUpdate = { Unit}, onRegister = { Unit})
     }
 }

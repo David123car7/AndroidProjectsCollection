@@ -6,16 +6,16 @@ import com.david.shoppinglist.auth.Authentication
 import com.david.shoppinglist.firestore.FirestoreDB
 
 data class RegisterState (
-    var uid : String = "",
-    var email : String? = null,
-    var password : String? = null,
-    var firstName: String = "",
-    var lastName: String = "",
-    var error : String? = null,
-    var isLoading : Boolean = false
+    val uid : String = "",
+    val email : String = "",
+    val password : String = "",
+    val firstName: String = "",
+    val lastName: String = "",
+    val error : String? = null,
+    val isLoading : Boolean = false
 )
 
-class RegisterViewModel(val authentication: Authentication, val firestoreDB: FirestoreDB): ViewModel() {
+class RegisterViewModel(): ViewModel() {
     var uiState = mutableStateOf(RegisterState())
 
     fun updateEmail(email : String) {
@@ -34,7 +34,7 @@ class RegisterViewModel(val authentication: Authentication, val firestoreDB: Fir
         uiState.value = uiState.value.copy(lastName = lastName)
     }
 
-    fun register(onUserCreated:()->Unit) {
+    fun register(authentication: Authentication, firestoreDB: FirestoreDB, onUserCreated:()->Unit) {
         uiState.value = uiState.value.copy(isLoading = true)
 
         if (uiState.value.firstName.isEmpty()) {
