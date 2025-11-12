@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationViews.register,
+                        startDestination = NavigationViews.login,
                         modifier = Modifier.padding(innerPadding)
                     ){
                         composable (NavigationViews.register){

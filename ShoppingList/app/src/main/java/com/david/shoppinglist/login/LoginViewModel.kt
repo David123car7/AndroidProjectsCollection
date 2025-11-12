@@ -11,7 +11,7 @@ data class LoginState (
     var isLoading : Boolean = false
 )
 
-class LoginViewModel(val authentication: Authentication): ViewModel() {
+class LoginViewModel(): ViewModel() {
     var uiState = mutableStateOf(LoginState())
 
     fun updateEmail(email : String) {
@@ -22,7 +22,7 @@ class LoginViewModel(val authentication: Authentication): ViewModel() {
         uiState.value = uiState.value.copy(password = password)
     }
 
-    fun login(onLoginSuccess:()->Unit) {
+    fun login(authentication: Authentication, onLoginSuccess:()->Unit) {
         uiState.value = uiState.value.copy(isLoading = true)
 
         if (uiState.value.email.isNullOrEmpty()) {
@@ -41,5 +41,4 @@ class LoginViewModel(val authentication: Authentication): ViewModel() {
 
         authentication.login(onLoginSuccess = onLoginSuccess, uiState = uiState)
     }
-
 }

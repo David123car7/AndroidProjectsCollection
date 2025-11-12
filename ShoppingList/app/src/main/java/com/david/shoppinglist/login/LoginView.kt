@@ -21,12 +21,35 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.david.shoppinglist.auth.Authentication
 import com.david.shoppinglist.objects.NavigationViews
+import com.david.shoppinglist.ui.theme.ShoppingListTheme
+
 
 @Composable
 fun LoginView(modifier: Modifier, navController : NavController = rememberNavController(), authentication: Authentication){
-    val factory = LoginViewModelFactory(authentication = authentication)
-    val viewModel : LoginViewModel = viewModel(factory = factory)
+    val viewModel : LoginViewModel = viewModel()
     val uiState by viewModel.uiState
+
+    LoginViewContent(
+        modifier = modifier,
+        uiState = uiState,
+        onEmailUpdate = {value -> viewModel.updateEmail(value)},
+        onPasswordUpdate = {value -> viewModel.updatePassword(value)},
+        onLogin = {
+            viewModel.login(
+                authentication = authentication,
+                onLoginSuccess = { navController.navigate("home") }
+            )
+        },
+        onClickRegister = {navController.navigate("register")})
+}
+
+@Composable
+fun LoginViewContent(modifier: Modifier,
+                     uiState: LoginState,
+                     onEmailUpdate:(newValue: String)->Unit,
+                     onPasswordUpdate:(newValue: String)->Unit,
+                     onLogin:()->Unit,
+                     onClickRegister:()->Unit){
 
     Column(modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -35,16 +58,12 @@ fun LoginView(modifier: Modifier, navController : NavController = rememberNavCon
             value = uiState.email ?: "",
             label = { Text("Email") },
             modifier = Modifier.padding(8.dp),
-            onValueChange = {
-                viewModel.updateEmail(it)
-            })
+            onValueChange = { value -> onEmailUpdate(value) })
         TextField(
             value = uiState.password ?: "",
             label = { Text("Password") },
             modifier = Modifier.padding(8.dp),
-            onValueChange = {
-                viewModel.updatePassword(it)
-            })
+            onValueChange = {value -> onPasswordUpdate(value) })
 
         if (uiState.error != null) {
             Text(text = uiState.error!!, modifier = Modifier.padding(8.dp))
@@ -52,17 +71,11 @@ fun LoginView(modifier: Modifier, navController : NavController = rememberNavCon
 
         Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
             Button(modifier = Modifier.padding(8.dp),
-                onClick = {
-                    viewModel.login(){
-                        navController.navigate("home")
-                    }
-                }){
+                onClick = {onLogin()}){
                 Text("Login")
             }
             Button(modifier = Modifier.padding(8.dp),
-                onClick = {
-                    navController.navigate(NavigationViews.register)
-                }){
+                onClick = {onClickRegister()}){
                 Text("Register")
             }
         }
@@ -72,7 +85,18 @@ fun LoginView(modifier: Modifier, navController : NavController = rememberNavCon
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun LoginPreview(){
+    ShoppingListTheme() {
+        val uiState = LoginState(email = "", password = "", error = "", isLoading = false)
+
+        LoginViewContent(
+            modifier = Modifier,
+            uiState = uiState,
+            onEmailUpdate = { Unit},
+            onPasswordUpdate = { Unit},
+            onLogin = { Unit},
+            onClickRegister = { Unit})
+        }
 }
