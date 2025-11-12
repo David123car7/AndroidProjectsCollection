@@ -5,14 +5,13 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-class FirestoreDB(val firestore: FirebaseFirestore = Firebase.firestore) {
+class FirestoreDB(val firestore: FirebaseFirestore) {
     val collections = FirestoreCollections()
 
     fun getUser(uid: String, onResult: (DocumentSnapshot?) -> Unit) {
         if (uid.isNullOrBlank())
             onResult(null)
 
-        var document: DocumentSnapshot
         firestore.collection(collections.users).document(uid).get()
             .addOnSuccessListener { doc ->
                 onResult(doc)

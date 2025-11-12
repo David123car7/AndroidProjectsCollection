@@ -30,7 +30,7 @@ import com.david.shoppinglist.ui.theme.White01
 
 
 @Composable
-fun ProfileView(modifier: Modifier = Modifier, firestoreDB: FirestoreDB = FirestoreDB(), navController: NavController, uid: String){
+fun ProfileView(modifier: Modifier = Modifier, firestoreDB: FirestoreDB, navController: NavController, uid: String){
     val profileViewModel: ProfileViewModel = viewModel()
     val uiState by profileViewModel.uiState
 
@@ -71,5 +71,4 @@ fun ProfileViewContent(modifier: Modifier, navController: NavController, uiState
 @Preview
 @Composable
 fun ProfilePreview(){
-    ProfileView(navController = rememberNavController(), uid = "")
 }

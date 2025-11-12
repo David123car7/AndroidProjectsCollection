@@ -5,7 +5,7 @@ import com.david.shoppinglist.login.LoginState
 import com.david.shoppinglist.register.RegisterState
 import com.google.firebase.auth.FirebaseAuth
 
-class Authentication(val auth: FirebaseAuth = FirebaseAuth.getInstance()) {
+class Authentication(val auth: FirebaseAuth) {
     fun GetCurrentUserUID(): String? {
         return auth.currentUser?.uid
     }

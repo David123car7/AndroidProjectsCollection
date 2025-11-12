@@ -15,7 +15,7 @@ class ProfileViewModel(): ViewModel() {
 
     var uiState = mutableStateOf(ProfileState())
 
-    fun fetchProfile(uid: String, firestoreDB: FirestoreDB = FirestoreDB()){
+    fun fetchProfile(uid: String, firestoreDB: FirestoreDB){
         firestoreDB.getUser(uid){ doc ->
             if(doc != null && doc.exists()){
                 val user = User(
