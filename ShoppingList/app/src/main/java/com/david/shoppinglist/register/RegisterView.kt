@@ -22,7 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.david.shoppinglist.auth.Authentication
-import com.david.shoppinglist.constants.NavigationViews
+import com.david.shoppinglist.objects.NavigationViews
 import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 import com.google.firebase.Firebase
@@ -37,6 +37,7 @@ fun RegisterView(modifier: Modifier, navController : NavController = rememberNav
     val uiState by viewModel.uiState
 
     RegisterViewContent(modifier = modifier, uiState = uiState, navController = navController, viewModel = viewModel)
+    //use onUpdateValues() to call viewModel only here
 }
 
 @Composable

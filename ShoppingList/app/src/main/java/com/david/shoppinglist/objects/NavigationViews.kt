@@ -1,4 +1,4 @@
-package com.david.shoppinglist.constants
+package com.david.shoppinglist.objects
 
 object NavigationViews {
     val home: String = "home"

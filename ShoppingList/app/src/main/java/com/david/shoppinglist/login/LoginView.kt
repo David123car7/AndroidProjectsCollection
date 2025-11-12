@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.david.shoppinglist.auth.Authentication
-import com.david.shoppinglist.constants.NavigationViews
+import com.david.shoppinglist.objects.NavigationViews
 
 @Composable
 fun LoginView(modifier: Modifier, navController : NavController = rememberNavController(), authentication: Authentication){

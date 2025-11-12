@@ -17,7 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.david.shoppinglist.auth.Authentication
 import com.david.shoppinglist.cart.ShoppingCartView
-import com.david.shoppinglist.constants.NavigationViews
+import com.david.shoppinglist.objects.NavigationViews
 import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.home.HomeView
 import com.david.shoppinglist.login.LoginView
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationViews.login,
+                        startDestination = NavigationViews.profile,
                         modifier = Modifier.padding(innerPadding)
                     ){
                         composable (NavigationViews.register){
