@@ -34,7 +34,7 @@ class RegisterViewModel(val authentication: Authentication, val firestoreDB: Fir
         uiState.value = uiState.value.copy(lastName = lastName)
     }
 
-    fun register(onRegisterSuccess:()->Unit) {
+    fun register(onUserCreated:()->Unit) {
         uiState.value = uiState.value.copy(isLoading = true)
 
         if (uiState.value.firstName.isEmpty()) {
@@ -65,9 +65,12 @@ class RegisterViewModel(val authentication: Authentication, val firestoreDB: Fir
             return
         }
 
-        authentication.register(onRegisterSuccess = onRegisterSuccess, uiState = uiState)
-        if(uiState.value.error != null)
-            firestoreDB.createUser(uiState.value.uid, uiState.value.firstName, uiState.value.lastName)
+        authentication.register(uiState = uiState,
+            onRegisterSuccess = {
+                firestoreDB.createUser(uiState.value.uid, uiState.value.firstName, uiState.value.lastName)
+                onUserCreated()
+            }
+        )
     }
 }
 
