@@ -37,10 +37,10 @@ fun LoginView(modifier: Modifier, navController : NavController = rememberNavCon
         onLogin = {
             viewModel.login(
                 authentication = authentication,
-                onLoginSuccess = { navController.navigate("home") }
+                onLoginSuccess = { navController.navigate(NavigationViews.listItems) }
             )
         },
-        onClickRegister = {navController.navigate("register")})
+        onClickRegister = {navController.navigate(NavigationViews.register)})
 }
 
 @Composable

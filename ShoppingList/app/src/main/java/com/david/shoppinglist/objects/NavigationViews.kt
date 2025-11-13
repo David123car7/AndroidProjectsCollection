@@ -1,7 +1,7 @@
 package com.david.shoppinglist.objects
 
 object NavigationViews {
-    val home: String = "home"
+    val listItems: String = "listItems"
     val login: String = "login"
     val register: String = "register"
     val profile: String = "profile"

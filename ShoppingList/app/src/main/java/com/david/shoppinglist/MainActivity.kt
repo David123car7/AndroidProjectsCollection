@@ -1,7 +1,6 @@
 package com.david.shoppinglist
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,7 +17,7 @@ import com.david.shoppinglist.auth.Authentication
 import com.david.shoppinglist.cart.ShoppingCartView
 import com.david.shoppinglist.objects.NavigationViews
 import com.david.shoppinglist.firestore.FirestoreDB
-import com.david.shoppinglist.home.HomeView
+import com.david.shoppinglist.listItems.ListItemsView
 import com.david.shoppinglist.login.LoginView
 import com.david.shoppinglist.profile.ProfileView
 import com.david.shoppinglist.register.RegisterView
@@ -50,8 +48,8 @@ class MainActivity : ComponentActivity() {
                             LoginView(modifier = Modifier.padding(innerPadding),
                                 navController = navController, authentication = auth)
                         }
-                        composable (NavigationViews.home){
-                            HomeView(modifier = Modifier.padding(innerPadding), navController = navController)
+                        composable (NavigationViews.listItems){
+                            ListItemsView(modifier = Modifier.padding(innerPadding), navController = navController, firestoreDB = fb)
                         }
                         composable (NavigationViews.profile){
                             val uid = auth.GetCurrentUserUID()

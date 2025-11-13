@@ -67,7 +67,7 @@ class RegisterViewModel(): ViewModel() {
 
         authentication.register(uiState = uiState,
             onRegisterSuccess = {
-                firestoreDB.createUser(uiState.value.uid, uiState.value.firstName, uiState.value.lastName)
+                firestoreDB.userDB.createUser(uiState.value.uid, uiState.value.firstName, uiState.value.lastName)
                 onUserCreated()
             }
         )

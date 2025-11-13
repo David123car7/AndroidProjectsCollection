@@ -27,7 +27,7 @@ class Authentication(val auth: FirebaseAuth) {
     }
 
     fun register(onRegisterSuccess: () -> Unit, uiState: MutableState<RegisterState>) {
-        auth.createUserWithEmailAndPassword(uiState.value.email!!,uiState.value.password!!)
+        auth.createUserWithEmailAndPassword(uiState.value.email,uiState.value.password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser

@@ -38,18 +38,18 @@ class ProfileViewModel(): ViewModel() {
     fun editProfile(uid: String, firestoreDB: FirestoreDB){
         uiState.value.user?.let { user ->
             if(user.firstName.isNotEmpty() && (user.firstName != oldState.user?.firstName)){
-                firestoreDB.editUserFirstName(uid, user.firstName)
+                firestoreDB.userDB.editUserFirstName(uid, user.firstName)
                 oldState.user?.firstName = user.firstName
             }
             if(user.lastName.isNotEmpty() && (user.lastName != oldState.user?.lastName)){
-                firestoreDB.editUserLastName(uid, user.lastName)
+                firestoreDB.userDB.editUserLastName(uid, user.lastName)
                 oldState.user?.lastName = user.lastName
             }
         }
     }
 
     fun fetchProfile(uid: String, firestoreDB: FirestoreDB){
-        firestoreDB.getUser(uid){ doc ->
+        firestoreDB.userDB.getUser(uid){ doc ->
             if(doc != null && doc.exists()){
                 val user = User(
                     firstName = doc.getString("firstName") ?: "",
