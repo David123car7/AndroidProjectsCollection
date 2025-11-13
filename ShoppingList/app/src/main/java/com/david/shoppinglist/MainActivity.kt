@@ -33,7 +33,6 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val fb = FirestoreDB(FirebaseFirestore.getInstance())
             val auth = Authentication(FirebaseAuth.getInstance())
-            val uid = auth.GetCurrentUserUID()
             ShoppingListTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
@@ -50,6 +49,7 @@ class MainActivity : ComponentActivity() {
                                 navController = navController, authentication = auth)
                         }
                         composable (NavigationViews.listItems){
+                            val uid = auth.GetCurrentUserUID()
                             if(uid != null)
                                 ListItemsView(modifier = Modifier.padding(innerPadding), navController = navController, firestoreDB = fb, uid = uid)
                             else{ //i have to make this modular
@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         composable (NavigationViews.profile){
+                            val uid = auth.GetCurrentUserUID()
                             if(uid != null)
                                 ProfileView(modifier = Modifier.padding(innerPadding), firestoreDB = fb, navController = navController, uid = uid)
                             else{ //i have to make this modular
@@ -64,6 +65,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         composable (NavigationViews.cart){
+                            val uid = auth.GetCurrentUserUID()
                             if(uid != null)
                                 ShoppingCartView(modifier = Modifier.padding(innerPadding), navController = navController, firestoreDB = fb, uid = uid)
                             else{ //i have to make this modular

@@ -117,9 +117,9 @@ fun ProfileViewContent(modifier: Modifier,
                 Text("Update")
             }
         }
-        Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.BottomEnd){
-            NavbarView(modifier = Modifier, navController = navController)
-        }
+    }
+    Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.BottomEnd){
+        NavbarView(modifier = Modifier, navController = navController)
     }
 }
 

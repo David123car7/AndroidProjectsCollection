@@ -56,9 +56,9 @@ fun ListItemsViewContent(modifier: Modifier, uiState: ListItemsViewModel.ItemsLi
                 }
             }
         }
-        Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.BottomEnd){
-            NavbarView(modifier = Modifier, navController = navController)
-        }
+    }
+    Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.BottomEnd){
+        NavbarView(modifier = Modifier, navController = navController)
     }
 }
 
