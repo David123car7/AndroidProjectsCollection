@@ -64,8 +64,7 @@ fun ProfileViewContent(modifier: Modifier,
                        onProfileUpdate:()->Unit){
 
     Column(modifier = modifier
-        .fillMaxSize()
-        .background(color = White01)) {
+        .fillMaxSize()) {
         Box(modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp), contentAlignment = Alignment.Center){

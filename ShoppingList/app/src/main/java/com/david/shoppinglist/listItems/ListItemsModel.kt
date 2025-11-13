@@ -12,11 +12,15 @@ class ListItemsViewModel(): ViewModel() {
     )
 
     val uiState = mutableStateOf(ItemsListState())
-    var newItems = arrayListOf<Item>()
+
+    fun addItemToCart(uid: String,item: Item, firestoreDB: FirestoreDB){
+        firestoreDB.cartDB.addItem(uid = uid, item = item)
+    }
 
     fun fetchItems(firestoreDB: FirestoreDB){
         firestoreDB.itemDB.getItems(){ docs ->
             if(docs != null) {
+                var newItems = arrayListOf<Item>()
                 for(doc in docs){
                     val item = Item(
                         name = doc.getString("name") ?: "",
@@ -29,7 +33,7 @@ class ListItemsViewModel(): ViewModel() {
                 uiState.value = uiState.value.copy(items = newItems, error = null)
             }
             else{
-                uiState.value.copy(items = emptyList(), error = null)
+                uiState.value = uiState.value.copy(items = emptyList(), error = null)
             }
         }
     }

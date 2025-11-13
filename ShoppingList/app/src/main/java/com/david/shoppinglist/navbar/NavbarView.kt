@@ -23,7 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.david.shoppinglist.objects.NavigationViews
 import com.david.shoppinglist.ui.theme.Black01
+
 @Composable
 fun NavbarView(modifier: Modifier, navController : NavController = rememberNavController()){
     Column(modifier = modifier) {
@@ -31,7 +33,7 @@ fun NavbarView(modifier: Modifier, navController : NavController = rememberNavCo
         Row(modifier = modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
             Button(
                 modifier = modifier.size(80.dp),
-                onClick = {navController.navigate("cart")},
+                onClick = {navController.navigate(NavigationViews.cart)},
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(Color.Transparent),
                 contentPadding = PaddingValues(0.dp)
@@ -45,7 +47,7 @@ fun NavbarView(modifier: Modifier, navController : NavController = rememberNavCo
             }
             Button(
                 modifier = modifier.size(80.dp),
-                onClick = {navController.navigate("home")},
+                onClick = {navController.navigate(NavigationViews.listItems)},
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(Color.Transparent),
                 contentPadding = PaddingValues(0.dp)
@@ -59,7 +61,7 @@ fun NavbarView(modifier: Modifier, navController : NavController = rememberNavCo
             }
             Button(
                 modifier = modifier.size(80.dp),
-                onClick = {navController.navigate("profile")},
+                onClick = {navController.navigate(NavigationViews.profile)},
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(Color.Transparent),
                 contentPadding = PaddingValues(0.dp)

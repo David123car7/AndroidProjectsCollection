@@ -8,4 +8,5 @@ import com.google.firebase.firestore.firestore
 class FirestoreDB(val firestore: FirebaseFirestore) {
     val userDB = UserDB(firestore = firestore)
     val itemDB = ItemDB(firestore = firestore)
+    val cartDB = CartDB(firestore = firestore)
 }
