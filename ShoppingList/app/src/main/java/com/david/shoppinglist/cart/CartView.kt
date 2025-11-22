@@ -17,14 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.listItems.CartItemCellView
-import com.david.shoppinglist.listItems.ItemCellView
 import com.david.shoppinglist.models.CartItem
-import com.david.shoppinglist.models.Item
 import com.david.shoppinglist.navbar.NavbarView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 
@@ -73,7 +69,7 @@ fun ShoppingCartPreview(){
         val cartItem = CartItem(name = "Name", price = "19.99€", id = "", uid = "")
         val itemsList = arrayListOf<CartItem>()
         itemsList.add(cartItem)
-        val uiState = CartViewModel.CartListState(cartItems = itemsList, error = null)
+        val uiState = CartViewModel.CartListState(cartItems = itemsList,)
         ShoppingCartViewContent(modifier = Modifier,
             navController = rememberNavController(),
             uiState = uiState,

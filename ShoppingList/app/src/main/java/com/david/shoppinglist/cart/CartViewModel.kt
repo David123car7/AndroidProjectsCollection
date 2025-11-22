@@ -2,50 +2,96 @@ package com.david.shoppinglist.cart
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.david.shoppinglist.firestore.FirestoreDB
+import androidx.lifecycle.viewModelScope
 import com.david.shoppinglist.models.CartItem
+import com.david.shoppinglist.repository.CartRepository
+import com.david.shoppinglist.repository.ResultWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class CartViewModel @Inject constructor(private val db: FirestoreDB) : ViewModel() {
+class CartViewModel @Inject constructor(private val cartRepository: CartRepository) : ViewModel() {
     data class CartListState(
         val cartItems: List<CartItem> = emptyList(),
-        val error: String? = null
+        val error: String? = null,
+        var isLoading : Boolean = false
     )
 
     val uiState = mutableStateOf(CartListState())
 
-    fun removeCartItem(cartItemId: String){
-        db.cartDB.removeItem(cartItemId){ result ->
-            if(result){
-                uiState.value = uiState.value.copy(
-                    cartItems = uiState.value.cartItems.filter { it.id != cartItemId }
-                )
+
+    fun removeCartItem(cartItemId: String) {
+        cartRepository.removeCartItem(cartItemId)
+            .onEach { result ->
+                when (result) {
+                    is ResultWrapper.Loading -> {
+                        uiState.value = uiState.value.copy(
+                            isLoading = true
+                        )
+                    }
+                    is ResultWrapper.Success -> {
+                        uiState.value = uiState.value.copy(
+                            cartItems = uiState.value.cartItems.filter { it.id != cartItemId },
+                            isLoading = false,
+                            error = null
+                        )
+                    }
+                    is ResultWrapper.Error -> {
+                        uiState.value = uiState.value.copy(
+                            isLoading = false,
+                            error = result.message
+                        )
+                    }
+                }
             }
-        }
+            .launchIn(viewModelScope)
     }
 
     fun fetchCartItems(uid: String?){
-        if(uid != null) {
-            db.cartDB.getItems(uid = uid){ docs ->
-                if(docs != null) {
-                    var newItems = arrayListOf<CartItem>()
-                    for(doc in docs){
-                        val cartItem = CartItem(
-                            name = doc.getString("name") ?: "",
-                            price = doc.getString("price") ?: "",
-                            id = doc.getString("id") ?: "",
-                            uid = doc.getString("uid") ?: "", //dont really need this
-                        )
-                        newItems.add(cartItem)
-                    }
-                    uiState.value = uiState.value.copy(cartItems = newItems, error = null)
+        cartRepository.fetchCarts().onEach { result ->
+            when(result){
+                is ResultWrapper.Success -> {
+                    uiState.value = uiState.value.copy(
+                        cartItems = result.data?:emptyList(),
+                        isLoading = false,
+                        error = null
+                    )
                 }
-                else{
-                    uiState.value.copy(cartItems = emptyList(), error = null)
+                is ResultWrapper.Loading -> {
+                    uiState.value = uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+                is ResultWrapper.Error -> {
+                    uiState.value = uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
                 }
             }
-        }
+        }.launchIn(viewModelScope)
+    }
+
+    fun addItemToCart(uid: String, item: CartItem) {
+        cartRepository.addItem(uid, item)
+            .onEach { result ->
+                when(result) {
+                    is ResultWrapper.Loading -> {
+                        uiState.value = uiState.value.copy(isLoading = true)
+                    }
+                    is ResultWrapper.Success -> {
+                        uiState.value = uiState.value.copy(isLoading = false)
+                    }
+                    is ResultWrapper.Error -> {
+                        uiState.value = uiState.value.copy(
+                            isLoading = false,
+                            error = result.message
+                        )
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }
