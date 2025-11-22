@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -25,8 +26,8 @@ import com.david.shoppinglist.ui.theme.ShoppingListTheme
 
 
 @Composable
-fun LoginView(modifier: Modifier, navController : NavController = rememberNavController(), authentication: Authentication){
-    val viewModel : LoginViewModel = viewModel()
+fun LoginView(modifier: Modifier, navController : NavController = rememberNavController()){
+    val viewModel : LoginViewModel = hiltViewModel()
     val uiState by viewModel.uiState
 
     LoginViewContent(
@@ -36,7 +37,6 @@ fun LoginView(modifier: Modifier, navController : NavController = rememberNavCon
         onPasswordUpdate = {value -> viewModel.updatePassword(value)},
         onLogin = {
             viewModel.login(
-                authentication = authentication,
                 onLoginSuccess = { navController.navigate(NavigationViews.listItems) }
             )
         },

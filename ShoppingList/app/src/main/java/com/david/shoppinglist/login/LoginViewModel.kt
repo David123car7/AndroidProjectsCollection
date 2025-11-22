@@ -3,6 +3,8 @@ package com.david.shoppinglist.login
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.david.shoppinglist.auth.Authentication
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 data class LoginState (
     var email : String? = null,
@@ -11,7 +13,8 @@ data class LoginState (
     var isLoading : Boolean = false
 )
 
-class LoginViewModel(): ViewModel() {
+@HiltViewModel()
+class LoginViewModel @Inject constructor(private val auth: Authentication): ViewModel() {
     var uiState = mutableStateOf(LoginState())
 
     fun updateEmail(email : String) {
@@ -22,7 +25,7 @@ class LoginViewModel(): ViewModel() {
         uiState.value = uiState.value.copy(password = password)
     }
 
-    fun login(authentication: Authentication, onLoginSuccess:()->Unit) {
+    fun login(onLoginSuccess:()->Unit) {
         uiState.value = uiState.value.copy(isLoading = true)
 
         if (uiState.value.email.isNullOrEmpty()) {
@@ -39,6 +42,6 @@ class LoginViewModel(): ViewModel() {
             return
         }
 
-        authentication.login(onLoginSuccess = onLoginSuccess, uiState = uiState)
+        auth.login(onLoginSuccess = onLoginSuccess, uiState = uiState)
     }
 }

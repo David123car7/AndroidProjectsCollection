@@ -4,6 +4,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.david.shoppinglist.auth.Authentication
 import com.david.shoppinglist.firestore.FirestoreDB
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 data class RegisterState (
     val uid : String = "",
@@ -15,7 +17,8 @@ data class RegisterState (
     val isLoading : Boolean = false
 )
 
-class RegisterViewModel(): ViewModel() {
+@HiltViewModel()
+class RegisterViewModel @Inject constructor(private val auth: Authentication, private val db: FirestoreDB): ViewModel() {
     var uiState = mutableStateOf(RegisterState())
 
     fun updateEmail(email : String) {
@@ -34,7 +37,7 @@ class RegisterViewModel(): ViewModel() {
         uiState.value = uiState.value.copy(lastName = lastName)
     }
 
-    fun register(authentication: Authentication, firestoreDB: FirestoreDB, onUserCreated:()->Unit) {
+    fun register(onUserCreated:()->Unit) {
         uiState.value = uiState.value.copy(isLoading = true)
 
         if (uiState.value.firstName.isEmpty()) {
@@ -65,9 +68,9 @@ class RegisterViewModel(): ViewModel() {
             return
         }
 
-        authentication.register(uiState = uiState,
+        auth.register(uiState = uiState,
             onRegisterSuccess = {
-                firestoreDB.userDB.createUser(uiState.value.uid, uiState.value.firstName, uiState.value.lastName)
+                db.userDB.createUser(uiState.value.uid, uiState.value.firstName, uiState.value.lastName)
                 onUserCreated()
             }
         )

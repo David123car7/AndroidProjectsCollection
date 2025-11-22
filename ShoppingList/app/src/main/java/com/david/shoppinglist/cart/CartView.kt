@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -28,20 +29,20 @@ import com.david.shoppinglist.navbar.NavbarView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 
 @Composable
-fun ShoppingCartView(modifier: Modifier, navController: NavController, firestoreDB: FirestoreDB, uid: String){
-    val cartViewModel: CartViewModel = viewModel()
+fun ShoppingCartView(modifier: Modifier, navController: NavController, uid: String?){
+    val cartViewModel: CartViewModel = hiltViewModel()
     val uiState by cartViewModel.uiState
 
     ShoppingCartViewContent(modifier = modifier,
         uiState = uiState,
         navController = navController,
         onRemoveItem = {id ->
-            cartViewModel.removeCartItem(id, firestoreDB = firestoreDB)
+            cartViewModel.removeCartItem(id)
         },
         isBuying = false)
 
     LaunchedEffect(Unit) {
-        cartViewModel.fetchCartItems(uid = uid,firestoreDB = firestoreDB)
+        cartViewModel.fetchCartItems(uid = uid)
     }
 }
 

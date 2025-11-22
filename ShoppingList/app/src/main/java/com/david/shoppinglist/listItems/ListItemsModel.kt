@@ -4,8 +4,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.models.Item
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ListItemsViewModel(): ViewModel() {
+@HiltViewModel
+class ListItemsViewModel @Inject constructor(private val db: FirestoreDB): ViewModel() {
     data class ItemsListState(
         val items: List<Item> = emptyList(),
         val error: String? = null
@@ -13,12 +16,13 @@ class ListItemsViewModel(): ViewModel() {
 
     val uiState = mutableStateOf(ItemsListState())
 
-    fun addItemToCart(uid: String,item: Item, firestoreDB: FirestoreDB){
-        firestoreDB.cartDB.addItem(uid = uid, item = item)
+    fun addItemToCart(uid: String?,item: Item){
+        if(uid!= null)
+            db.cartDB.addItem(uid = uid, item = item)
     }
 
-    fun fetchItems(firestoreDB: FirestoreDB){
-        firestoreDB.itemDB.getItems(){ docs ->
+    fun fetchItems(){
+        db.itemDB.getItems(){ docs ->
             if(docs != null) {
                 var newItems = arrayListOf<Item>()
                 for(doc in docs){

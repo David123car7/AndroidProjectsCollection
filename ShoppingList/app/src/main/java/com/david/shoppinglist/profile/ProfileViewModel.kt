@@ -4,8 +4,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.models.User
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ProfileViewModel(): ViewModel() {
+@HiltViewModel
+class ProfileViewModel @Inject constructor(private val db: FirestoreDB): ViewModel() {
 
     data class ProfileState(
         val user: User? = null,
@@ -35,31 +38,36 @@ class ProfileViewModel(): ViewModel() {
         }
     }
 
-    fun editProfile(uid: String, firestoreDB: FirestoreDB){
-        uiState.value.user?.let { user ->
-            if(user.firstName.isNotEmpty() && (user.firstName != oldState.user?.firstName)){
-                firestoreDB.userDB.editUserFirstName(uid, user.firstName)
-                oldState.user?.firstName = user.firstName
-            }
-            if(user.lastName.isNotEmpty() && (user.lastName != oldState.user?.lastName)){
-                firestoreDB.userDB.editUserLastName(uid, user.lastName)
-                oldState.user?.lastName = user.lastName
+    fun editProfile(uid: String?) {
+        if (uid != null) {
+            uiState.value.user?.let { user ->
+                if (user.firstName.isNotEmpty() && (user.firstName != oldState.user?.firstName)) {
+                    db.userDB.editUserFirstName(uid, user.firstName)
+                    oldState.user?.firstName = user.firstName
+                }
+                if (user.lastName.isNotEmpty() && (user.lastName != oldState.user?.lastName)) {
+                    db.userDB.editUserLastName(uid, user.lastName)
+                    oldState.user?.lastName = user.lastName
+                }
             }
         }
     }
 
-    fun fetchProfile(uid: String, firestoreDB: FirestoreDB){
-        firestoreDB.userDB.getUser(uid){ doc ->
-            if(doc != null && doc.exists()){
-                val user = User(
-                    firstName = doc.getString("firstName") ?: "",
-                    lastName = doc.getString("lastName") ?: ""
-                )
-                uiState.value = uiState.value.copy(user = user, error = null)
-                oldState = uiState.value
-            }
-            else{
-                uiState.value = uiState.value.copy(user = null,error = "Error fetching profile")
+
+    fun fetchProfile(uid: String?){
+        if(uid != null){
+            db.userDB.getUser(uid){ doc ->
+                if(doc != null && doc.exists()){
+                    val user = User(
+                        firstName = doc.getString("firstName") ?: "",
+                        lastName = doc.getString("lastName") ?: ""
+                    )
+                    uiState.value = uiState.value.copy(user = user, error = null)
+                    oldState = uiState.value
+                }
+                else{
+                    uiState.value = uiState.value.copy(user = null,error = "Error fetching profile")
+                }
             }
         }
     }

@@ -4,8 +4,9 @@ import androidx.compose.runtime.MutableState
 import com.david.shoppinglist.login.LoginState
 import com.david.shoppinglist.register.RegisterState
 import com.google.firebase.auth.FirebaseAuth
+import javax.inject.Inject
 
-class Authentication(val auth: FirebaseAuth) {
+class Authentication @Inject constructor(private val auth: FirebaseAuth) {
     fun GetCurrentUserUID(): String? {
         return auth.currentUser?.uid
     }

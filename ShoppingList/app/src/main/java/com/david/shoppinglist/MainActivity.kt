@@ -24,53 +24,43 @@ import com.david.shoppinglist.register.RegisterView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var auth: Authentication
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            val fb = FirestoreDB(FirebaseFirestore.getInstance())
-            val auth = Authentication(FirebaseAuth.getInstance())
             ShoppingListTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationViews.listItems,
+                        startDestination = NavigationViews.login,
                         modifier = Modifier.padding(innerPadding)
                     ){
                         composable (NavigationViews.register){
                             RegisterView(modifier = Modifier.padding(innerPadding),
-                                navController = navController, firestoreDB = fb, authentication = auth)
+                                navController = navController)
                         }
                         composable (NavigationViews.login){
                             LoginView(modifier = Modifier.padding(innerPadding),
-                                navController = navController, authentication = auth)
+                               navController = navController)
                         }
                         composable (NavigationViews.listItems){
-                            val uid = auth.GetCurrentUserUID()
-                            if(uid != null)
-                                ListItemsView(modifier = Modifier.padding(innerPadding), navController = navController, firestoreDB = fb, uid = uid)
-                            else{ //i have to make this modular
-                                navController.navigate(NavigationViews.login)
-                            }
+                            ListItemsView(modifier = Modifier.padding(innerPadding), uid = auth.GetCurrentUserUID() ,navController = navController)
                         }
                         composable (NavigationViews.profile){
-                            val uid = auth.GetCurrentUserUID()
-                            if(uid != null)
-                                ProfileView(modifier = Modifier.padding(innerPadding), firestoreDB = fb, navController = navController, uid = uid)
-                            else{ //i have to make this modular
-                                navController.navigate(NavigationViews.login)
-                            }
+                            ProfileView(modifier = Modifier.padding(innerPadding),navController = navController, uid = auth.GetCurrentUserUID())
                         }
                         composable (NavigationViews.cart){
-                            val uid = auth.GetCurrentUserUID()
-                            if(uid != null)
-                                ShoppingCartView(modifier = Modifier.padding(innerPadding), navController = navController, firestoreDB = fb, uid = uid)
-                            else{ //i have to make this modular
-                                navController.navigate(NavigationViews.login)
-                            }
+                            ShoppingCartView(modifier = Modifier.padding(innerPadding), navController = navController, uid = auth.GetCurrentUserUID())
                         }
                     }
                 }

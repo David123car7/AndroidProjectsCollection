@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -40,18 +41,17 @@ import java.time.format.TextStyle
 
 
 @Composable
-fun ProfileView(modifier: Modifier = Modifier, firestoreDB: FirestoreDB,
-    navController: NavController, uid: String){
-    val profileViewModel: ProfileViewModel = viewModel()
+fun ProfileView(modifier: Modifier = Modifier, navController: NavController, uid: String?){
+    val profileViewModel: ProfileViewModel = hiltViewModel()
     val uiState by profileViewModel.uiState
 
     ProfileViewContent(modifier = modifier, navController = navController, uiState = uiState,
         onFirstNameUpdate = {value -> profileViewModel.updateFirstName(value)},
         onLastNameUpdate = {value -> profileViewModel.updateLastName(value)},
-        onProfileUpdate = { profileViewModel.editProfile(uid = uid, firestoreDB = firestoreDB)})
+        onProfileUpdate = { profileViewModel.editProfile(uid = uid)})
 
     LaunchedEffect(Unit) {
-        profileViewModel.fetchProfile(uid = uid, firestoreDB = firestoreDB)
+        profileViewModel.fetchProfile(uid = uid)
     }
 }
 

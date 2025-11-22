@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -31,8 +32,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
 @Composable
-fun RegisterView(modifier: Modifier, navController : NavController = rememberNavController(), firestoreDB: FirestoreDB, authentication: Authentication){
-    val viewModel : RegisterViewModel = viewModel()
+fun RegisterView(modifier: Modifier, navController : NavController = rememberNavController()){
+    val viewModel : RegisterViewModel = hiltViewModel()
     val uiState by viewModel.uiState
 
     RegisterViewContent(
@@ -43,8 +44,6 @@ fun RegisterView(modifier: Modifier, navController : NavController = rememberNav
         onEmailUpdate = {value ->  viewModel.updateEmail(value)},
         onPasswordUpdate = {value ->  viewModel.updatePassword(value)},
         onRegister = {viewModel.register(
-            authentication = authentication,
-            firestoreDB = firestoreDB,
             onUserCreated = {navController.navigate(NavigationViews.login)})})
 }
 
