@@ -1,4 +1,4 @@
-package com.david.shoppinglist.login
+package com.david.shoppinglist.ui.login
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

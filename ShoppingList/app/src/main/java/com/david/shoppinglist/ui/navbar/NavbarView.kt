@@ -1,4 +1,4 @@
-package com.david.shoppinglist.navbar
+package com.david.shoppinglist.ui.navbar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

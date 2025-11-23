@@ -14,16 +14,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.david.shoppinglist.auth.Authentication
-import com.david.shoppinglist.cart.ShoppingCartView
+import com.david.shoppinglist.ui.cart.ShoppingCartView
 import com.david.shoppinglist.objects.NavigationViews
-import com.david.shoppinglist.firestore.FirestoreDB
-import com.david.shoppinglist.listItems.ListItemsView
-import com.david.shoppinglist.login.LoginView
-import com.david.shoppinglist.profile.ProfileView
-import com.david.shoppinglist.register.RegisterView
+import com.david.shoppinglist.ui.listItems.ListItemsView
+import com.david.shoppinglist.ui.login.LoginView
+import com.david.shoppinglist.ui.profile.ProfileView
+import com.david.shoppinglist.ui.register.RegisterView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -54,13 +51,13 @@ class MainActivity : ComponentActivity() {
                                navController = navController)
                         }
                         composable (NavigationViews.listItems){
-                            ListItemsView(modifier = Modifier.padding(innerPadding), uid = auth.GetCurrentUserUID() ,navController = navController)
+                            ListItemsView(modifier = Modifier.padding(innerPadding),navController = navController)
                         }
                         composable (NavigationViews.profile){
-                            ProfileView(modifier = Modifier.padding(innerPadding),navController = navController, uid = auth.GetCurrentUserUID())
+                            ProfileView(modifier = Modifier.padding(innerPadding),navController = navController)
                         }
                         composable (NavigationViews.cart){
-                            ShoppingCartView(modifier = Modifier.padding(innerPadding), navController = navController, uid = auth.GetCurrentUserUID())
+                            ShoppingCartView(modifier = Modifier.padding(innerPadding), navController = navController)
                         }
                     }
                 }

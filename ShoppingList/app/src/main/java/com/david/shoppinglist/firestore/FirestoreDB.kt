@@ -10,5 +10,4 @@ import javax.inject.Inject
 class FirestoreDB @Inject constructor(val firestore: FirebaseFirestore) {
     val userDB = UserDB(firestore = firestore)
     val itemDB = ItemDB(firestore = firestore)
-    val cartDB = CartDB(firestore = firestore)
 }

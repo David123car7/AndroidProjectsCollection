@@ -1,10 +1,15 @@
-package com.david.shoppinglist.register
+package com.david.shoppinglist.ui.register
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.david.shoppinglist.auth.Authentication
 import com.david.shoppinglist.firestore.FirestoreDB
+import com.david.shoppinglist.repository.ProfileRepository
+import com.david.shoppinglist.repository.ResultWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 data class RegisterState (
@@ -18,7 +23,7 @@ data class RegisterState (
 )
 
 @HiltViewModel()
-class RegisterViewModel @Inject constructor(private val auth: Authentication, private val db: FirestoreDB): ViewModel() {
+class RegisterViewModel @Inject constructor(private val profileRepository: ProfileRepository): ViewModel() {
     var uiState = mutableStateOf(RegisterState())
 
     fun updateEmail(email : String) {
@@ -68,12 +73,28 @@ class RegisterViewModel @Inject constructor(private val auth: Authentication, pr
             return
         }
 
-        auth.register(uiState = uiState,
-            onRegisterSuccess = {
-                db.userDB.createUser(uiState.value.uid, uiState.value.firstName, uiState.value.lastName)
-                onUserCreated()
-            }
-        )
+        profileRepository.createUser(uiState.value.firstName, uiState.value.lastName)
+            .onEach { result ->
+                when (result) {
+                    is ResultWrapper.Loading -> {
+                        uiState.value = uiState.value.copy(
+                            isLoading = true
+                        )
+                    }
+                    is ResultWrapper.Success -> {
+                        uiState.value = uiState.value.copy(
+                            isLoading = false,
+                            error = null,
+                        )
+                    }
+                    is ResultWrapper.Error -> {
+                        uiState.value = uiState.value.copy(
+                            isLoading = false,
+                            error = result.message
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
     }
 }
 

@@ -1,8 +1,8 @@
 package com.david.shoppinglist.auth
 
 import androidx.compose.runtime.MutableState
-import com.david.shoppinglist.login.LoginState
-import com.david.shoppinglist.register.RegisterState
+import com.david.shoppinglist.ui.login.LoginState
+import com.david.shoppinglist.ui.register.RegisterState
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 

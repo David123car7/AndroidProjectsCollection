@@ -1,4 +1,4 @@
-package com.david.shoppinglist.login
+package com.david.shoppinglist.ui.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,10 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.david.shoppinglist.auth.Authentication
 import com.david.shoppinglist.objects.NavigationViews
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 

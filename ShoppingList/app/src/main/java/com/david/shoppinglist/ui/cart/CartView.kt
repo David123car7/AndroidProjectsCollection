@@ -1,4 +1,4 @@
-package com.david.shoppinglist.listItems
+package com.david.shoppinglist.ui.cart
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,44 +17,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.david.shoppinglist.firestore.FirestoreDB
-import com.david.shoppinglist.models.Item
-import com.david.shoppinglist.navbar.NavbarView
+import com.david.shoppinglist.listItems.CartItemCellView
+import com.david.shoppinglist.models.CartItem
+import com.david.shoppinglist.ui.navbar.NavbarView
 import com.david.shoppinglist.ui.theme.ShoppingListTheme
 
 @Composable
+fun ShoppingCartView(modifier: Modifier, navController: NavController){
+    val cartViewModel: CartViewModel = hiltViewModel()
+    val uiState by cartViewModel.uiState
 
-fun ListItemsView(modifier: Modifier, uid: String?, navController: NavController){
-    val itemsListViewModel: ListItemsViewModel = hiltViewModel()
-    val uiState by itemsListViewModel.uiState
-
-    ListItemsViewContent(modifier = modifier,
+    ShoppingCartViewContent(modifier = modifier,
         uiState = uiState,
         navController = navController,
-        onBuyItem = {item ->
-            itemsListViewModel.addItemToCart(uid = uid , item = item)
+        onRemoveItem = {id ->
+            cartViewModel.removeCartItem(id)
         },
-        isBuying = true)
+        isBuying = false)
 
     LaunchedEffect(Unit) {
-        itemsListViewModel.fetchItems()
+        cartViewModel.fetchCartItems()
     }
 }
 
 @Composable
-fun ListItemsViewContent(modifier: Modifier, uiState: ListItemsViewModel.ItemsListState,
-                         navController: NavController, onBuyItem:(itemBought: Item)->Unit, isBuying: Boolean){
+fun ShoppingCartViewContent(modifier: Modifier, uiState: CartViewModel.CartListState, isBuying: Boolean,
+                         navController: NavController, onRemoveItem:(cartItemId: String)->Unit){
     Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally){
         if(uiState.error != null){
             Text(uiState.error, modifier = Modifier.fillMaxWidth().padding(16.dp))
         }
         else{
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                itemsIndexed(items = uiState.items){ index, item ->
-                    ItemCellView(item, isBuying = isBuying, onBuyItem = { onBuyItem(item) })
+                itemsIndexed(items = uiState.cartItems){ index, cartItem ->
+                    CartItemCellView(cartItem, onRemoveItem = { onRemoveItem(cartItem.id) }, isBuying = isBuying)
                 }
             }
         }
@@ -64,15 +62,18 @@ fun ListItemsViewContent(modifier: Modifier, uiState: ListItemsViewModel.ItemsLi
     }
 }
 
-@Preview
+@Preview()
 @Composable
-fun ListItemsPreview(){
+fun ShoppingCartPreview(){
     ShoppingListTheme() {
-        val item = Item(name = "Name", description = "Description", "0.0", imageURL = "url")
-        val itemsList = arrayListOf<Item>()
-        itemsList.add(item)
-        val uiState = ListItemsViewModel.ItemsListState(items = itemsList, error = null)
-        ListItemsViewContent(modifier = Modifier, navController = rememberNavController(), uiState = uiState, onBuyItem = { Unit}, isBuying = true)
+        val cartItem = CartItem(name = "Name", price = "19.99€", id = "", uid = "")
+        val itemsList = arrayListOf<CartItem>()
+        itemsList.add(cartItem)
+        val uiState = CartViewModel.CartListState(cartItems = itemsList,)
+        ShoppingCartViewContent(modifier = Modifier,
+            navController = rememberNavController(),
+            uiState = uiState,
+            onRemoveItem = { Unit},
+            isBuying = false)
     }
 }
-

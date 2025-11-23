@@ -2,6 +2,7 @@ package com.david.shoppinglist.repository
 
 import com.david.shoppinglist.auth.Authentication
 import com.david.shoppinglist.models.CartItem
+import com.david.shoppinglist.models.User
 import com.david.shoppinglist.objects.FirestoreCollections
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -14,29 +15,32 @@ import javax.inject.Inject
 
 class CartRepository @Inject constructor(private val db: FirebaseFirestore, private val auth: Authentication) {
     fun fetchCarts(): Flow<ResultWrapper<List<CartItem>>> = flow {
-        try{
-            val uid = auth.GetCurrentUserUID()
-            val docRef = db.collection(FirestoreCollections.cartItems).whereEqualTo("uid", uid)
+        val uid = auth.GetCurrentUserUID()
+        if(uid == null){
+            emit(ResultWrapper.Error("User not signed in"))
+            return@flow
+        }
 
-            docRef
-                .snapshotFlow()
-                .collect(){
-                    val carts = mutableListOf<CartItem>()
-                    for (doc in it.documents ?: emptyList()) {
-                        val cart = doc.toObject(CartItem::class.java)
-                        cart?.id = doc.id
-                        cart?.let {
-                            carts.add(cart)
-                        }
+        emit(ResultWrapper.Loading())
+        val docRef = db.collection(FirestoreCollections.cartItems).whereEqualTo("uid", uid)
+
+        docRef
+            .snapshotFlow()
+            .collect(){
+                val carts = mutableListOf<CartItem>()
+                for (doc in it.documents) {
+                    val cart = doc.toObject(CartItem::class.java)
+                    cart?.id = doc.id
+                    cart?.let {
+                        carts.add(cart)
                     }
-
-                    emit(ResultWrapper.Success(carts.toList()))
                 }
-        }
-        catch (e:Exception) {
-            emit(ResultWrapper.Error(e.localizedMessage?:"Unexpected Error"))
-        }
-    }.flowOn(Dispatchers.IO)
+
+                emit(ResultWrapper.Success(carts.toList()))
+            }
+        }.catch { e ->
+            emit(ResultWrapper.Error(e.localizedMessage ?: "Unexpected error"))
+        }.flowOn(Dispatchers.IO)
 
     fun removeCartItem(itemId: String): Flow<ResultWrapper<Unit>> = flow {
         emit(ResultWrapper.Loading())
@@ -48,11 +52,17 @@ class CartRepository @Inject constructor(private val db: FirebaseFirestore, priv
 
         emit(ResultWrapper.Success(Unit))
 
-    }.catch { e ->
-        emit(ResultWrapper.Error(e.localizedMessage ?: "Unexpected Error"))
-    }.flowOn(Dispatchers.IO)
+        }.catch { e ->
+            emit(ResultWrapper.Error(e.localizedMessage ?: "Unexpected Error"))
+        }.flowOn(Dispatchers.IO)
 
-    fun addItem(uid: String, item: CartItem): Flow<ResultWrapper<Unit>> = flow {
+    fun addItem(item: CartItem): Flow<ResultWrapper<Unit>> = flow {
+        val uid = auth.GetCurrentUserUID()
+        if(uid == null){
+            emit(ResultWrapper.Error("User not signed in"))
+            return@flow
+        }
+
         emit(ResultWrapper.Loading())
 
         val docRef = db.collection(FirestoreCollections.cartItems).document()
@@ -68,7 +78,7 @@ class CartRepository @Inject constructor(private val db: FirebaseFirestore, priv
 
         emit(ResultWrapper.Success(Unit))
 
-    }.catch { e ->
-        emit(ResultWrapper.Error(e.localizedMessage ?: "Unexpected error"))
-    }.flowOn(Dispatchers.IO)
+        }.catch { e ->
+            emit(ResultWrapper.Error(e.localizedMessage ?: "Unexpected error"))
+        }.flowOn(Dispatchers.IO)
 }
