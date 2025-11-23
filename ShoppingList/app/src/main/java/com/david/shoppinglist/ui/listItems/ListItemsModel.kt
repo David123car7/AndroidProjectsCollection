@@ -3,7 +3,6 @@ package com.david.shoppinglist.ui.listItems
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.models.CartItem
 import com.david.shoppinglist.models.Item
 import com.david.shoppinglist.repository.CartRepository

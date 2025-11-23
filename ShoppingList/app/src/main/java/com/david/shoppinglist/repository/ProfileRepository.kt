@@ -7,63 +7,60 @@ import com.david.shoppinglist.objects.FirestoreCollections
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class ProfileRepository @Inject constructor(private val db: FirebaseFirestore, private val auth: Authentication){
+class ProfileRepository @Inject constructor(private val db: FirebaseFirestore, private val auth: Authentication) {
 
     fun fetchUser(): Flow<ResultWrapper<User>> = flow {
         val uid = auth.GetCurrentUserUID()
-        if(uid == null){
+        if (uid == null) {
             emit(ResultWrapper.Error("User not signed in"))
             return@flow
         }
 
-        try{
-            emit(ResultWrapper.Loading<User>())
+        emit(ResultWrapper.Loading<User>())
 
-            val docRef = db.collection(FirestoreCollections.users)
-                .document(uid)
-                .get()
-                .await()
+        val docRef = db.collection(FirestoreCollections.users)
+            .document(uid)
+            .get()
+            .await()
 
-            val user = docRef.toObject(User::class.java)
+        val user = docRef.toObject(User::class.java)
 
-            if (user != null) {
-                emit(ResultWrapper.Success<User>(user))
-            } else {
-                emit(ResultWrapper.Error<User>("User not found"))
-            }
+        if (user != null) {
+            emit(ResultWrapper.Success<User>(user))
+        } else {
+            emit(ResultWrapper.Error<User>("User not found"))
         }
-        catch (e:Exception) {
-            emit(ResultWrapper.Error(e.localizedMessage?:"Unexpected Error"))
-        }
-    }.flowOn(Dispatchers.IO)
+
+        }.catch { e ->
+            emit(ResultWrapper.Error(e.localizedMessage ?: "Unexpected Error"))
+        }.flowOn(Dispatchers.IO)
 
     fun editUserFirstName(firstName: String): Flow<ResultWrapper<Unit>> = flow {
         emit(ResultWrapper.Loading<Unit>())
 
         val uid = auth.GetCurrentUserUID()
-        if(uid == null){
+        if (uid == null) {
             emit(ResultWrapper.Error("User not signed in"))
             return@flow
         }
 
-        try {
-            db.collection(FirestoreCollections.users)
-                .document(uid)
-                .update("firstName", firstName)
-                .await()
+        db.collection(FirestoreCollections.users)
+            .document(uid)
+            .update("firstName", firstName)
+            .await()
 
-            emit(ResultWrapper.Success(Unit))
+        emit(ResultWrapper.Success(Unit))
 
-        } catch (e: Exception) {
+        }.catch { e ->
             emit(ResultWrapper.Error<Unit>(e.localizedMessage ?: "Unexpected error"))
-        }
+        }.flowOn(Dispatchers.IO)
 
-    }.flowOn(Dispatchers.IO)
 
     fun editUserLastName(lastName: String): Flow<ResultWrapper<Unit>> = flow {
         emit(ResultWrapper.Loading<Unit>())
@@ -74,19 +71,18 @@ class ProfileRepository @Inject constructor(private val db: FirebaseFirestore, p
             return@flow
         }
 
-        try {
-            db.collection(FirestoreCollections.users)
-                .document(uid)
-                .update("lastName", lastName)
-                .await()
 
-            emit(ResultWrapper.Success(Unit))
+        db.collection(FirestoreCollections.users)
+            .document(uid)
+            .update("lastName", lastName)
+            .await()
 
-        } catch (e: Exception) {
+        emit(ResultWrapper.Success(Unit))
+
+        }.catch  { e ->
             emit(ResultWrapper.Error<Unit>(e.localizedMessage ?: "Unexpected error"))
-        }
+        }.flowOn(Dispatchers.IO)
 
-    }.flowOn(Dispatchers.IO)
 
     fun createUser(firstName: String, lastName: String): Flow<ResultWrapper<Unit>> = flow {
         emit(ResultWrapper.Loading<Unit>())
@@ -102,17 +98,15 @@ class ProfileRepository @Inject constructor(private val db: FirebaseFirestore, p
             "lastName" to lastName
         )
 
-        try {
-            db.collection(FirestoreCollections.users)
-                .document(uid)
-                .set(user)
-                .await()
 
-            emit(ResultWrapper.Success(Unit))
+        db.collection(FirestoreCollections.users)
+            .document(uid)
+            .set(user)
+            .await()
 
-        } catch (e: Exception) {
+        emit(ResultWrapper.Success(Unit))
+
+        }.catch { e ->
             emit(ResultWrapper.Error<Unit>(e.localizedMessage ?: "Unexpected error"))
-        }
-
-    }.flowOn(Dispatchers.IO)
+        }.flowOn(Dispatchers.IO)
 }

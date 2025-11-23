@@ -3,7 +3,6 @@ package com.david.shoppinglist.ui.profile
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.models.User
 import com.david.shoppinglist.repository.ProfileRepository
 import com.david.shoppinglist.repository.ResultWrapper

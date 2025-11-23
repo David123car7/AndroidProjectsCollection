@@ -4,7 +4,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.david.shoppinglist.auth.Authentication
-import com.david.shoppinglist.firestore.FirestoreDB
 import com.david.shoppinglist.repository.ProfileRepository
 import com.david.shoppinglist.repository.ResultWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
